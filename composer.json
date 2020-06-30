@@ -1,0 +1,38 @@
+{
+    "name": "mastermoltra/pokeapi",
+    "description": "My Pokeapi implementation with PHP and NodeJS",
+    "type": "project",
+    "support": {
+        "docs": "https://pokeapi.co/docs/v2"
+    },
+    "require": {
+        "symfony/http-foundation": "^5.1"
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "phpstan/phpstan": "^0.12.29",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "server/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "server/tests/"
+        }
+    },
+    "scripts": {
+        "tests": [
+            "@phpstan",
+            "@phpcs",
+            "@codecept"
+        ],
+        "codecept": "php codecept run --steps",
+        "phpcs": "phpcs --standard=PSR12 server/src server/tests",
+        "phpstan": "phpstan analyse -l 3 server/src server/tests",
+        "phpfixer": "php-cs-fixer fix --config=.php_cs.dist -v"
+    },
+    "license": "MIT"
+}

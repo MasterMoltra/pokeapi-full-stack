@@ -1,0 +1,9 @@
+/vendor/
+/node_modules/
+/cache/
+/docs/
+/api/
+/data/
+.env
+.php_cs*
+!.php_cs.dist

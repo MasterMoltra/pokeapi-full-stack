@@ -1,0 +1,12 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . '/server/src')
+    ->in(__DIR__ . '/server/tests');
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PhpCsFixer' => true,
+        'concat_space' => false
+    ])
+    ->setFinder($finder);
