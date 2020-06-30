@@ -1,0 +1,9 @@
+parameters:
+    level: 3
+    paths:
+        - server/src
+        - server/tests
+    excludes_analyse:
+        - server/tests/_support/*
+    fileExtensions:
+        - php

@@ -2,7 +2,8 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/server/src')
-    ->in(__DIR__ . '/server/tests');
+    ->in(__DIR__ . '/server/tests')
+    ->exclude('_support');
 
 return PhpCsFixer\Config::create()
     ->setRules([
