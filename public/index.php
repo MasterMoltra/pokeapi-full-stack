@@ -14,12 +14,12 @@ $path = rtrim(strtolower($request->getPathInfo()), '/');
 $path = $path ?: '/'; // manage path with and without /
 
 if (!isset($routes[$path])) {
-    $response = new Response('Pagina non trovata', 404);
+    $response = new Response('Page not found', 404);
 } else {;
     try {
-        $response = (new BaseController)->render($routes[$path]);
+        $response = (new BaseController)->render($request, $routes[$path]);
     } catch (\Throwable $exception) {
-        $response = new Response('Errore -> ' . $exception->getMessage(), 500);
+        $response = new Response('Error! -> ' . $exception->getMessage(), 500);
     }
 }
 
