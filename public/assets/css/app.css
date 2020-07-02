@@ -1,0 +1,210 @@
+body {
+    max-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url('/assets/images/pokeapi.png');
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-color: #ccd7ec;
+}
+
+header {
+    display: block;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #ef5350;
+    margin: 0;
+    padding: 10px 20px;
+    box-shadow: 0 0 5px #221e1e;
+    transition: height 1s;
+}
+header h1 {
+    display: inline-block;
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.5;
+    color: #fff;
+    transition: all 0.5s;
+}
+header > img {
+    height: 50px;
+    width: 125px;
+    float: right;
+    transition: all 1s;
+}
+header.scroll-minimize {
+    height: 40px;
+    padding: 5px 20px;
+}
+header.scroll-minimize h1 {
+    font-size: 16px;
+    line-height: 2;
+}
+header.scroll-minimize > img {
+    height: 30px;
+    width: 75px;
+}
+
+.container {
+    display: block;
+    box-sizing: border-box;
+    background-color: #fff;
+    margin: 70px auto 100px;
+    padding: 20px 10px;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 5px #221e1e;
+}
+.container h3 {
+    font-size: 20px;
+    color: #3760a8;
+}
+
+.box {
+    line-height: 1.3;
+    padding: 10px;
+    margin: 0 auto;
+    background: rgba(217, 248, 210, 0.8);
+    border: 2px dotted #ef5350;
+    text-align: center;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+fieldset .form-input-group {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px 0;
+    background-color: #ccd7ec;
+}
+fieldset:focus-within {
+    background: #ff8;
+}
+fieldset label {
+    display: inline-block;
+    font-weight: 500;
+    line-height: 1.5;
+    padding: 5px;
+    margin: 10px 0;
+    background-color: #fff;
+    color: #000;
+}
+fieldset input[type='text'] {
+    display: inline-block;
+    line-height: 1.4;
+    width: 280px;
+    font-weight: 500;
+    padding: 5px 0;
+    margin: 0 auto;
+    border: 1px solid #fff;
+    background-color: #fff;
+    color: #000;
+}
+fieldset input[type='text']:focus {
+    line-height: 1.5;
+    border: 1px solid #ef5350;
+    outline: none;
+    background-color: #fff;
+}
+fieldset input[type='submit'],
+fieldset button {
+    font-size: 25px;
+    cursor: pointer;
+    padding: 5px;
+    margin: 10px 0 10px 10px;
+    color: #fff;
+    font-weight: 900;
+    background-color: #ef5350;
+    border: 1px dotted #000;
+}
+
+fieldset .form-radio-group input {
+    margin-left: 5px;
+}
+
+footer {
+    display: block;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 0;
+    background: rgba(233, 227, 227, 0.8);
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+}
+footer p {
+    padding: 5px;
+    margin: 0;
+    font-size: 12px;
+    font-style: italic;
+    text-align: right;
+}
+
+@media only screen and (max-width: 480px) {
+    .container {
+        margin-top: 30px;
+        padding: 5px;
+        box-shadow: none;
+    }
+
+    fieldset .form-input-group {
+        display: block;
+        text-align: center;
+    }
+    fieldset .form-input-group > span {
+        display: block;
+    }
+    fieldset input[type='submit'],
+    fieldset button {
+        display: block;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    footer {
+        margin-bottom: 0;
+    }
+}
+
+/** Extra template elements */
+.box-error {
+    background-color: rgba(252, 211, 211, 0.8);
+}
+.button-disabled-wrapper {
+    cursor: not-allowed;
+    background: rgba(233, 227, 227, 0.8);
+}
+
+.spin-loader {
+    margin: 10px auto;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
