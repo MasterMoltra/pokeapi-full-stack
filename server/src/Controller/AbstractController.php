@@ -20,9 +20,9 @@ abstract class AbstractController
         }
 
         // Get data from a controller Action
-        if (strpos($routeInfo['name'], 'Controller:') !== false) {
+        if (false !== strpos($routeInfo['name'], 'Controller:')) {
             $args = null;
-            $getpost = $method === 'GET' ? 'query' : 'request';
+            $getpost = 'GET' === $method ? 'query' : 'request';
             $data = json_decode($request->getContent(), true);
 
             foreach ($routeInfo['args'] as $key) {
@@ -31,7 +31,7 @@ abstract class AbstractController
                     $args[] = $data[$key];
                 } else {
                     // Url Syntax for scalar and array ?key=value&array[key]=value
-                    $args[] = $request->$getpost->get($key);
+                    $args[] = $request->{$getpost}->get($key);
                 }
             }
 
@@ -39,7 +39,8 @@ abstract class AbstractController
             // Utils::logRequestInfo($request, ['args' => $args]);
 
             $action = explode(':', $routeInfo['name'])[1];
-            return (new BaseController)->$action(...$args);
+
+            return (new BaseController())->{$action}(...$args);
         }
 
         // Otherwise include a raw file name

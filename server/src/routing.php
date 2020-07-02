@@ -9,7 +9,7 @@ return [
     ],
     '/php/pokeinfos' => [
         'name' => 'Controller:infosByPath',
-        'args' => ["path", "metadata"],
-        'allowed_methods' => ['POST']
-    ]
+        'args' => ['path', 'metadata'],
+        'allowed_methods' => ['POST'],
+    ],
 ];

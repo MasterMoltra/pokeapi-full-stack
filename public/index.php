@@ -15,9 +15,9 @@ $path = $path ?: '/'; // manage path with and without /
 
 if (!isset($routes[$path])) {
     $response = new Response('Page not found', 404);
-} else {;
+} else {
     try {
-        $response = (new BaseController)->render($request, $routes[$path]);
+        $response = (new BaseController())->render($request, $routes[$path]);
     } catch (\Throwable $exception) {
         $response = new Response('Error! -> ' . $exception->getMessage(), 500);
     }

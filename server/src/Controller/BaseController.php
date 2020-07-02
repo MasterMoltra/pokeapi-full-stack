@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class BaseController extends AbstractController
 {
-
     public function infosByPath(string $path, ?array $metadata = null): JsonResponse
     {
         $path = filter_var($path, FILTER_SANITIZE_URL);
@@ -19,8 +17,8 @@ class BaseController extends AbstractController
         </div>";
 
         return new JsonResponse([
-            "metadata" => $metadata,
-            "content" => $content
+            'metadata' => $metadata,
+            'content' => $content,
         ]);
     }
 }

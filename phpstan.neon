@@ -3,6 +3,7 @@ parameters:
     paths:
         - server/src
         - server/tests
+        - public
     excludes_analyse:
         - server/tests/_support/*
     fileExtensions:

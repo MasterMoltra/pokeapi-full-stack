@@ -32,7 +32,7 @@
             "@codecept"
         ],
         "codecept": "codecept run --steps",
-        "phpcs": "phpcs --ignore=server/tests/_support/* --standard=PSR12 server/src server/tests ",
+        "phpcs": "phpcs --ignore=server/tests/_support/* --standard=PSR12 --extensions=php server/src server/tests public",
         "phpstan": "phpstan analyse -c phpstan.neon",
         "phpfixer": "php-cs-fixer fix --config=.php_cs.dist -v"
     },
