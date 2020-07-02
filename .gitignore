@@ -4,6 +4,7 @@
 /docs/
 /api/
 /data/
+/var/
 .env
 .php_cs*
 !.php_cs.dist
