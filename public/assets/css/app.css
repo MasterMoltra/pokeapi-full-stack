@@ -57,6 +57,14 @@ header.scroll-minimize > img {
     background: rgba(255, 255, 255, 0.5);
     box-shadow: 0 0 5px #221e1e;
 }
+.container h4 {
+    text-align: center;
+    color: #3760a8;
+}
+.container h4 > span {
+    color: #696969;
+}
+
 .container h3 {
     font-size: 20px;
     color: #3760a8;
@@ -98,7 +106,7 @@ fieldset input[type='text'] {
     display: inline-block;
     line-height: 1.4;
     width: 280px;
-    font-weight: 500;
+    font-weight: 700;
     padding: 5px 0;
     margin: 0 auto;
     border: 1px solid #fff;

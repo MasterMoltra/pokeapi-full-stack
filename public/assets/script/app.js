@@ -1,4 +1,6 @@
 const MMPokeApp = (function() {
+    const url = 'www.masterpoke.co/pokemon/';
+
     function _sanitize(string) {
         return string.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ-Bulu\s]/gim, '').trim();
     }
@@ -27,11 +29,15 @@ const MMPokeApp = (function() {
 
         console.log('START');
 
+        // Reset Api url from paths
+        let baseUrl = document.getElementById('pokeapi-path');
+        baseUrl.innerHTML = `<span>${baseUrl.firstChild.textContent}</span>`;
+
         // Get form[input] path name
-        let pathInput = document.getElementsByName('pokeapi-path')[0].value;
-        pathInput = _sanitize(pathInput);
-        document.getElementsByName('pokeapi-path')[0].value = pathInput;
-        if (!pathInput) {
+        let nameInput = document.getElementsByName('pokeapi-name')[0].value;
+        nameInput = _sanitize(nameInput);
+        document.getElementsByName('pokeapi-name')[0].value = nameInput;
+        if (!nameInput) {
             return {
                 content:
                     '<div class="box box-error">Please, enter a valid Pok&eacute;mon name before send your request, thanks!</div>'
@@ -56,7 +62,7 @@ const MMPokeApp = (function() {
         // Send the request
         // OPT 1 - Use Json Object
         let dataByJson = {
-            path: pathInput,
+            path: nameInput,
             metadata: {
                 serviceWorker: 'serviceWorker' in navigator,
                 device:
@@ -71,7 +77,7 @@ const MMPokeApp = (function() {
 
         // OPT 2 - Use Formdata Object
         // let dataByForm = new FormData();
-        // dataByForm.append('path', pathInput);
+        // dataByForm.append('path', nameInput);
         // TODO: this field require a cast to Array inside the php render engine
         // dataByForm.append('metadata', JSON.stringify({ mode }));
 
@@ -92,11 +98,16 @@ const MMPokeApp = (function() {
             console.log('Responce HTTP-Error: ' + response.status);
             console.log(`Error: ${e}`);
             result = {
+                path: '',
                 content:
                     '<div class="box box-error">Something was wrong, sorry try again later!</div>'
             };
         } finally {
             boxContent.innerHTML = '';
+            // Append path on Url
+            baseUrl.innerHTML = `<span>${baseUrl.textContent}</span>/${mode}/${
+                result.path
+            }`;
             // Restore the form[button]
             event.target.classList.remove('button-disabled-wrapper');
             event.target.disabled = false;

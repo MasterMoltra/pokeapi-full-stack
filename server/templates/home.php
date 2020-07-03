@@ -13,7 +13,7 @@ include_once __DIR__ . '/partials/head.php';
         <form action="" method="post">
             <fieldset>
                 <div class="form-input-group">
-                    <label>https://masterpoke.co/pokemon/</label><input type="text" name="pokeapi-path" placeholder="Enter a valid name here, e.g.bulbasaur">
+                    <label>Pok&eacute;mon name:</label><input type="text" name="pokeapi-name" placeholder="Enter a valid name, e.g.bulbasaur">
                 </div>
                 <div class="form-input-group">
                     <span>Send the request to:</span>
@@ -25,6 +25,7 @@ include_once __DIR__ . '/partials/head.php';
             </fieldset>
         </form>
         <div id="content" class="content"> </div>
+        <h4 id="pokeapi-path"><span>www.masterpoke.co/pokemon</span></h4>
     </div>
     <?php
     include_once __DIR__ . '/partials/footer.php';
