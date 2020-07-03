@@ -1,7 +1,7 @@
 const MMPokeApp = (function() {
     function _sanitize(string) {
         return string
-            .replace(/[^a-záéíóúñü]/gim, '')
+            .replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/gim, '')
             .trim()
             .toLowerCase();
     }
@@ -32,6 +32,8 @@ const MMPokeApp = (function() {
 
         // Get form[input] path name
         let pathInput = document.getElementsByName('pokeapi-path')[0].value;
+        pathInput = _sanitize(pathInput);
+        document.getElementsByName('pokeapi-path')[0].value = pathInput;
         if (!pathInput) {
             return {
                 content:
@@ -46,9 +48,6 @@ const MMPokeApp = (function() {
         let boxContent = document.getElementById('content');
         boxContent.innerHTML = '<div class="spin-loader"></div>';
 
-        pathInput = _sanitize(pathInput);
-        document.getElementsByName('pokeapi-path')[0].value = pathInput;
-
         // Get form[input] checked mode
         let modeChecked = [].filter.call(
             document.getElementsByName('pokeapi-mode'),
@@ -59,12 +58,24 @@ const MMPokeApp = (function() {
 
         // Send the request
         // OPT 1 - Use Json Object
-        let dataByJson = { path: pathInput, metadata: { mode } };
+        let dataByJson = {
+            path: pathInput,
+            metadata: {
+                serviceWorker: 'serviceWorker' in navigator,
+                device:
+                    typeof isMobileDevice !== 'function'
+                        ? 'unknow'
+                        : isMobileDevice()
+                        ? 'mobile'
+                        : 'desktop',
+                display: window.innerWidth + 'x' + window.innerHeight
+            }
+        };
 
         // OPT 2 - Use Formdata Object
         // let dataByForm = new FormData();
         // dataByForm.append('path', pathInput);
-        // TODO: this require cast to Array inside the php render engine
+        // TODO: this field require a cast to Array inside the php render engine
         // dataByForm.append('metadata', JSON.stringify({ mode }));
 
         let response = await fetch(`/${mode}/pokeinfos`, {
@@ -114,8 +125,6 @@ const formButtonElement = document.getElementById('pokeapi-send');
 if (formButtonElement) {
     formButtonElement.addEventListener('click', async function(event) {
         const result = await MMPokeApp.getInfos(event);
-        console.log(result);
-
         document.getElementById('content').innerHTML = result.content;
     });
 }

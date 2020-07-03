@@ -32,4 +32,12 @@ class Utils
             );
         }
     }
+
+    public static function sanitizeUrl(string $url): string
+    {
+        return filter_var(
+            iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $url),
+            FILTER_SANITIZE_URL
+        );
+    }
 }
