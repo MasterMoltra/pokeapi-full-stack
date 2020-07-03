@@ -33,11 +33,18 @@ class Utils
         }
     }
 
-    public static function sanitizeUrl(string $url): string
+    public static function sanitizePathUrl(string $path): string
     {
-        return filter_var(
-            iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $url),
-            FILTER_SANITIZE_URL
+        $path =  strtolower(
+            iconv(
+                'UTF-8',
+                'ASCII//TRANSLIT//IGNORE',
+                parse_url($path, PHP_URL_PATH)
+            )
         );
+        $path = preg_replace('/[[:space:]]+/', '-', $path);
+        $path = preg_replace('/[^a-zA-Z-]/', '', $path);
+
+        return $path;
     }
 }

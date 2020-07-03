@@ -1,9 +1,6 @@
 const MMPokeApp = (function() {
     function _sanitize(string) {
-        return string
-            .replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/gim, '')
-            .trim()
-            .toLowerCase();
+        return string.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ-Bulu\s]/gim, '').trim();
     }
 
     const _domHeaderResize = function() {

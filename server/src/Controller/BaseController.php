@@ -9,7 +9,7 @@ class BaseController extends AbstractController
 {
     public function infosByPath(string $path, ?array $metadata = null): JsonResponse
     {
-        $path = Utils::sanitizeUrl($path);
+        $path = Utils::sanitizePathUrl($path);
         $metadata = filter_var_array($metadata, FILTER_SANITIZE_STRING);
         // sleep(3);
 
