@@ -35,7 +35,7 @@ class Utils
 
     public static function sanitizePathUrl(string $path): string
     {
-        $path =  strtolower(
+        $path = strtolower(
             iconv(
                 'UTF-8',
                 'ASCII//TRANSLIT//IGNORE',
@@ -43,8 +43,7 @@ class Utils
             )
         );
         $path = preg_replace('/[[:space:]]+/', '-', $path);
-        $path = preg_replace('/[^a-zA-Z-]/', '', $path);
 
-        return $path;
+        return preg_replace('/[^a-zA-Z-]/', '', $path);
     }
 }

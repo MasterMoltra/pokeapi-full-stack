@@ -9,7 +9,8 @@ return [
     ],
     '/php/pokeinfos' => [
         'name' => 'Controller:infosByPath',
-        'args' => ['path', 'metadata'],
+        'args' => ['name', 'metadata'],
+        // Add 'GET' in allowed_methods to allow e.g. php/pokeinfos?name=Seismitoad
         'allowed_methods' => ['POST'],
     ],
 ];

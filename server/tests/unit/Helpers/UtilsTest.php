@@ -4,11 +4,14 @@ namespace Helpers;
 
 use App\Helpers\Utils;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class UtilsTest extends \Codeception\Test\Unit
 {
-    /** 
-     * List of non Ascii string that have to convert and sanitize
-     * @return array
+    /**
+     * List of non Ascii string that have to convert and sanitize.
      */
     public function stringsDataProvider(): array
     {
@@ -20,7 +23,7 @@ class UtilsTest extends \Codeception\Test\Unit
             ['Farfetch\'d', 'farfetchd'],
             ['Tapu Bulu', 'tapu-bulu'],
             ['òàùèìü', 'oaueiu'],
-            ['https://malware.domaìn.com/test', 'test']
+            ['https://malware.domaìn.com/test', 'test'],
         ];
     }
 

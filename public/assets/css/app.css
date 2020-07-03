@@ -50,6 +50,7 @@ header.scroll-minimize > img {
 
 .container {
     display: block;
+    width: 90%;
     box-sizing: border-box;
     background-color: #fff;
     margin: 70px auto 100px;
@@ -60,6 +61,7 @@ header.scroll-minimize > img {
 .container h4 {
     text-align: center;
     color: #3760a8;
+    word-break: break-all;
 }
 .container h4 > span {
     color: #696969;
@@ -73,7 +75,8 @@ header.scroll-minimize > img {
 .box {
     line-height: 1.3;
     padding: 10px;
-    margin: 0 auto;
+    width: 50%;
+    margin: 10px auto;
     background: rgba(217, 248, 210, 0.8);
     border: 2px dotted #ef5350;
     text-align: center;
@@ -158,6 +161,12 @@ footer p {
         padding: 5px;
         box-shadow: none;
     }
+    .container h4 > span {
+        display: block;
+    }
+    .box {
+        width: auto;
+    }
 
     fieldset .form-input-group {
         display: block;
@@ -179,7 +188,7 @@ footer p {
 }
 
 /** Extra template elements */
-.box-error {
+.error-bg {
     background-color: rgba(252, 211, 211, 0.8);
 }
 .button-disabled-wrapper {

@@ -25,7 +25,7 @@ include_once __DIR__ . '/partials/head.php';
             </fieldset>
         </form>
         <div id="content" class="content"> </div>
-        <h4 id="pokeapi-path"><span>www.masterpoke.co/pokemon</span></h4>
+        <h4 id="pokeapi-path"><span>masterpoke.local/pokemon</span></h4>
     </div>
     <?php
     include_once __DIR__ . '/partials/footer.php';
