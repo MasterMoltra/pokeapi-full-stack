@@ -1,3 +1,4 @@
+namespace: Test
 paths:
     tests: server/tests
     output: server/tests/_output
