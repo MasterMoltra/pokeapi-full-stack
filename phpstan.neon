@@ -4,7 +4,10 @@ parameters:
         - server/src
         - server/tests
         - public
-    excludes_analyse:
-        - server/tests/_support/*
+    ignoreErrors:
+    -
+        message: '#PHPDoc tag.*[a-zA-Z0-9\\_]+#'
+        paths:
+            - server/tests/_support/_generated/*
     fileExtensions:
         - php

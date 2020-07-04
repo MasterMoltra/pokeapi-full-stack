@@ -2,8 +2,10 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/server/src')
-    ->in(__DIR__ . '/server/tests')
     ->in(__DIR__ . '/public')
+    ->in(__DIR__ . '/server/tests')
+    ->exclude('_data')
+    ->exclude('_output')
     ->exclude('_support');
 
 return PhpCsFixer\Config::create()
