@@ -1,4 +1,5 @@
 <?php
+
 namespace Test;
 
 /**
@@ -15,12 +16,24 @@ namespace Test;
  * @method void pause()
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
 
     /**
-     * Define custom actions here
+     * Allowed HTTP methods for a specific route.
+     *
+     * @param string $route
+     *
+     * @return array
      */
+    public function _routeGetAllowedMethods(string $route): array
+    {
+        $routes = include __DIR__ . '/../../src/routing.php';
+
+        return
+            $routes[$route]['allowed_methods'] ??
+            ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'PATCH', 'PURGE', 'TRACE'];
+    }
 }
