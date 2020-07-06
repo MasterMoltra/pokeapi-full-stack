@@ -64,6 +64,7 @@ header.scroll-minimize > img {
     word-break: break-all;
 }
 .container h4 > span {
+    font-size: 10px;
     color: #696969;
 }
 
@@ -86,13 +87,22 @@ fieldset {
     margin: 0;
     padding: 0;
     border: 0;
+    background-color: #ccd7ec;
 }
 fieldset .form-input-group {
     display: inline-block;
     padding: 5px 10px;
     margin: 10px 0;
-    background-color: #ccd7ec;
 }
+fieldset .form-input-group.radio {
+    border: 1px dotted #fff;
+    border-width: 0 0 0 1px;
+}
+fieldset .form-input-group > span {
+    display: block;
+    text-align: center;
+}
+
 fieldset:focus-within {
     background: #ff8;
 }
@@ -134,10 +144,6 @@ fieldset button {
     border: 1px dotted #000;
 }
 
-fieldset .form-radio-group input {
-    margin-left: 5px;
-}
-
 footer {
     display: block;
     text-align: center;
@@ -155,6 +161,23 @@ footer p {
     text-align: right;
 }
 
+@media only screen and (max-width: 960px) {
+    fieldset .form-input-group {
+        display: block;
+        text-align: center;
+    }
+    fieldset .form-input-group.radio {
+        border: 0;
+    }
+
+    fieldset input[type='submit'],
+    fieldset button {
+        display: block;
+        margin: 30px auto;
+        text-align: center;
+    }
+}
+
 @media only screen and (max-width: 480px) {
     .container {
         margin-top: 30px;
@@ -166,24 +189,6 @@ footer p {
     }
     .box {
         width: auto;
-    }
-
-    fieldset .form-input-group {
-        display: block;
-        text-align: center;
-    }
-    fieldset .form-input-group > span {
-        display: block;
-    }
-    fieldset input[type='submit'],
-    fieldset button {
-        display: block;
-        margin: 30px auto;
-        text-align: center;
-    }
-
-    footer {
-        margin-bottom: 0;
     }
 }
 

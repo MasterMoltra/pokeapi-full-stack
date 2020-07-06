@@ -14,7 +14,7 @@ abstract class AbstractController
     {
         $method = strtoupper($request->getMethod());
         if (
-            key_exists('allowed_methods', $routeInfo) &&
+            !empty($routeInfo['allowed_methods']) &&
             !in_array($method, $routeInfo['allowed_methods'])
         ) {
             throw new BadRequestException("Method {$method} not allowed");
@@ -27,7 +27,7 @@ abstract class AbstractController
             $data = json_decode($request->getContent(), true);
 
             foreach ($routeInfo['args'] as $key) {
-                if (is_array($data) && key_exists($key, $data)) {
+                if (is_array($data) && array_key_exists($key, $data)) {
                     // From content type application/json
                     $args[] = $data[$key];
                 } else {

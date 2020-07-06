@@ -6,7 +6,7 @@ class Template
 {
     /** @var string Full path file to include */
     protected $file;
-    /** @var array List of vars to be imported into the template  */
+    /** @var array List of vars to be imported into the template */
     protected $vars = [];
 
     public function __construct(string $file)
@@ -15,12 +15,10 @@ class Template
     }
 
     /**
-     * set  function
+     * set  function.
      *
      * @param string $key
-     * @param mixed $value
-     *
-     * @return Template
+     * @param mixed  $value
      */
     public function set($key, $value): Template
     {
@@ -30,9 +28,7 @@ class Template
     }
 
     /**
-     * Return a list of setted vars
-     *
-     * @return array
+     * Return a list of setted vars.
      */
     public function getTplVars(): array
     {
@@ -40,14 +36,13 @@ class Template
     }
 
     /**
-     * Get current buffer contents and delete current output buffer
-     *
+     * Get current buffer contents and delete current output buffer.
      */
     public function render()
     {
         extract($this->vars, EXTR_PREFIX_ALL, 'tpl_');
         ob_start();
-        include($this->file);
+        include $this->file;
 
         return ob_get_clean();
     }

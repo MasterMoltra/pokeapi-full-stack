@@ -3,46 +3,66 @@
 namespace App\Controller;
 
 use App\Helpers\Utils;
+use App\Pokemon;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class BaseController extends AbstractController
 {
-    /** @var string A local base directory path with json data */
-    private const API_BASE_DIR = __DIR__ . '/../../..';
-
     /**
      * Generate e Json Response with a pokemon data html block.
      *
-     * @param string $name Pokemon name to get data
-     * @param array|null $metadata Extra useful info about the client device
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param string     $name     Pokemon name to get data
+     * @param null|array $metadata Extra useful info about the client device
      */
     public function jsonInfosByPath(string $name, ?array $metadata = null): JsonResponse
     {
         sleep(1); // Simulate request waiting ...
 
-        $arrayPokeList = $this->getPokemonDataArray();
         $path = Utils::sanitizePathUrl($name);
-        $pokeKey = array_search(
-            $path,
-            array_column($arrayPokeList['results'], 'name')
-        );
+        $channel = $metadata['mode'] ?? null;
+        $pokemon = new Pokemon($channel);
+
+        switch ($channel) {
+            case 'local':
+                /** Notice: local require searching in the root json file to retrieve the real path of the searched Pokemon */
+                $arrayPokeList = $pokemon->getLocalRootJson();
+                $pokeKey = array_search(
+                    $path,
+                    array_column($arrayPokeList['results'], 'name')
+                );
+
+                $jsonUrl = false === $pokeKey ?
+                    null :
+                    $arrayPokeList['results'][$pokeKey]['url'];
+
+                break;
+            case 'api':
+                $jsonUrl = $path;
+
+                break;
+            default:
+                $jsonUrl = null;
+
+                break;
+        }
 
         // Box template output
         $outputData = '';
-        if (false === $pokeKey) {
+        if (!$jsonUrl) {
             $outputData .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
         } else {
-            $jsonUrl = $arrayPokeList['results'][$pokeKey]['url'];
-            $data = $this->getPokemonDataArray(self::API_BASE_DIR . $jsonUrl);
-            $outputData .= $data && key_exists('name', $data) ?
-                '<h2>' . ucfirst($data['name']) . '</h2>' :
-                '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
-            if ($data) {
+            // Get pokemon data
+            $data = $pokemon->getData($jsonUrl);
+
+            if (!$data) {
+                $outputData .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
+            } else {
+                $outputData .= !empty($data['name']) ?
+                    '<h2>' . ucfirst($data['name']) . '</h2>' : '';
+
                 $imageUrl =
-                    array_key_exists('device', $metadata) &&
+                    !empty($metadata['device']) &&
                     'mobile' == $metadata['device'] ?
                     $data['sprites']['back_default'] ?? $data['sprites']['front_shiny'] :
                     $data['sprites']['front_default'];
@@ -94,15 +114,14 @@ class BaseController extends AbstractController
     }
 
     /**
-     * Generate a full Html optimized Seo Static page response
+     * Generate a full Html optimized Seo Static page response.
      *
      * @param string $name Pokemon name to get data
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function htmlStaticSeoByPath(string $name): Response
     {
-        $arrayPokeList = $this->getPokemonDataArray();
+        $pokemon = new Pokemon('local'); // NOTICE: Force LOCAL mode
+        $arrayPokeList = $pokemon->getLocalRootJson();
         $path = Utils::sanitizePathUrl($name);
         $pokeKey = array_search(
             $path,
@@ -111,15 +130,15 @@ class BaseController extends AbstractController
 
         if (false === $pokeKey) {
             // TODO: redirect to home page
-            return new Response("Page Not Found !!!");
+            return new Response('Page Not Found !!!');
         }
 
         $jsonUrl = $arrayPokeList['results'][$pokeKey]['url'];
-        $data = $this->getPokemonDataArray(self::API_BASE_DIR . $jsonUrl);
+        $data = $pokemon->getData($jsonUrl);
 
         if (!$data) {
             // TODO: redirect to home page
-            return new Response("Page Not Found !!!");
+            return new Response('Page Not Found !!!');
         }
 
         // Box template output
@@ -134,17 +153,13 @@ class BaseController extends AbstractController
 
     /**
      * Generate a single Html pokemon block box.
-     *
-     * @param array $data
-     *
-     * @return string
      */
     protected function pokemonRenderSeoBox(array $data): string
     {
         $outputData = '<div class="box">';
         $outputData .= '<h2>' . ucfirst($data['name']) . '</h2>';
 
-        $imageUrl =  $data['sprites']['front_defaultz'] ??
+        $imageUrl = $data['sprites']['front_defaultz'] ??
             $data['sprites']['front_shiny'] ??
             $data['sprites']['back_default'];
         $outputData .= $imageUrl ?
@@ -167,22 +182,5 @@ class BaseController extends AbstractController
         $outputData .= '</div>';
 
         return $outputData;
-    }
-
-    /**
-     * Retrieve json data by a full path
-     *
-     * @param string|null $path Full path to get data
-     * @param string $channel A specific channel to retrieve data (e.g. local | api)
-     *
-     * @return array
-     */
-    protected function getPokemonDataArray(?string $path = null, string $channel = 'local'): ?array
-    {
-        $jsonPokemonList = file_get_contents(
-            ($path ?? self::API_BASE_DIR . '/api/v2/pokemon/') . 'index.json'
-        );
-
-        return json_decode($jsonPokemonList, true);
     }
 }

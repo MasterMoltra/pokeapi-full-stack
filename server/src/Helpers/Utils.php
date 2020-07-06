@@ -14,9 +14,9 @@ class Utils
     public static function logRequestInfo(?Request $request = null, ?array $extra = null): void
     {
         $date = date('j.n.Y');
-        $fileName = $request === null ? 'logs_' . $date : 'requests_' . $date;
+        $fileName = null === $request ? 'logs_' . $date : 'requests_' . $date;
 
-        $objects = $request === null ?
+        $objects = null === $request ?
             [] :
             [
                 'content' => $request->getContent(),

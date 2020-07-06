@@ -27,9 +27,21 @@ const MMPokeApp = (function() {
 
         console.log('START');
 
-        // Reset Api url from the path part
-        let baseUrl = document.getElementById('pokeapi-path');
-        baseUrl.innerHTML = `<span>${baseUrl.firstChild.textContent}</span>`;
+        // Get form[input] checked mode
+        let modeChecked = [].filter.call(
+            document.getElementsByName('pokeapi-mode'),
+            (el) => el.checked === true
+        );
+        // strong string check (local or api)
+        mode = modeChecked[0]?.value === 'api' ? 'api' : 'local';
+
+        // Reset the Api url path
+        const baseUrl =
+            mode === 'api'
+                ? 'https://pokeapi.co/api/v2/pokemon/'
+                : `${window.location.hostname} -> pokemon -> `;
+        let domFullUri = document.getElementById('pokeapi-path');
+        domFullUri.innerHTML = baseUrl;
 
         // Get form[input] name
         let nameInput = document.getElementsByName('pokeapi-name')[0].value;
@@ -49,19 +61,20 @@ const MMPokeApp = (function() {
         let boxContent = document.getElementById('content');
         boxContent.innerHTML = '<div class="spin-loader"></div>';
 
-        // Get form[input] checked mode
-        let modeChecked = [].filter.call(
-            document.getElementsByName('pokeapi-mode'),
+        // Get form[input] checked program language
+        let plangChecked = [].filter.call(
+            document.getElementsByName('pokeapi-plang'),
             (el) => el.checked === true
         );
         // strong string check (node or php)
-        mode = modeChecked[0]?.value === 'node' ? 'node' : 'php';
+        plang = plangChecked[0]?.value === 'node' ? 'node' : 'php';
 
         // Send the request
         // OPT 1 - Use Json Object
         let dataByJson = {
             name: nameInput,
             metadata: {
+                mode: mode,
                 serviceWorker: 'serviceWorker' in navigator,
                 device:
                     typeof isMobileDevice !== 'function'
@@ -77,9 +90,9 @@ const MMPokeApp = (function() {
         // let dataByForm = new FormData();
         // dataByForm.append('name', nameInput);
         // TODO: this field require a cast to Array inside the php render engine
-        // dataByForm.append('metadata', JSON.stringify({ mode }));
+        // dataByForm.append('metadata', JSON.stringify({ plang }));
 
-        let response = await fetch(`/${mode}/pokeinfos`, {
+        let response = await fetch(`/${plang}/pokeinfos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -103,9 +116,9 @@ const MMPokeApp = (function() {
         } finally {
             boxContent.innerHTML = '';
             // Append path at the Url
-            baseUrl.innerHTML = `<span>${
-                baseUrl.textContent
-            }</span> - ${mode}/${result.path}`;
+            domFullUri.innerHTML = `${baseUrl}${
+                result.path
+            } <span>(with ${plang})</span>`;
             // Restore the form[button]
             event.target.classList.remove('button-disabled-wrapper');
             event.target.disabled = false;
