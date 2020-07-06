@@ -30,7 +30,7 @@ class FunctionalTester extends \Codeception\Actor
      */
     public function _routeGetAllowedMethods(string $route): array
     {
-        $routes = include __DIR__ . '/../../src/routing.php';
+        $routes = include __DIR__ . '/../../src/_routing.php';
 
         return
             $routes[$route]['allowed_methods'] ??

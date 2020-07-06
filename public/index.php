@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$routes = require_once __DIR__ . '/../server/src/routing.php';
+$routes = require_once __DIR__ . '/../server/src/_routing.php';
 
 $request = Request::createFromGlobals();
 
