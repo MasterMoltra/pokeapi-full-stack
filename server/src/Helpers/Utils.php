@@ -11,10 +11,14 @@ class Utils
      */
     private const LOG_DIR = __DIR__ . '/../../../var/php';
 
-    public static function logRequestInfo(?Request $request = null, ?array $extra = null): void
-    {
-        $date = date('j.n.Y');
-        $fileName = null === $request ? 'logs_' . $date : 'requests_' . $date;
+    public static function logRequestInfo(
+        ?Request $request = null,
+        ?array $extra = null,
+        ?string $name = null
+    ): void {
+
+        $fileName = $name ? $name . '_' : (null === $request ? 'logs_'  : 'requests_');
+        $fileName .= date('j.n.Y');
 
         $objects = null === $request ?
             [] :
