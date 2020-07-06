@@ -3,6 +3,9 @@
 return [
     '/' => [
         'name' => 'home',
+        'template_vars' => [
+            'msg' => '<em>Welcome!</em> ',
+        ],
     ],
     '/dash' => [
         'name' => 'dash',

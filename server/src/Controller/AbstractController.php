@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Helpers\Utils;
+use App\Template;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,9 +45,14 @@ abstract class AbstractController
         }
 
         // Otherwise include a raw file name
-        ob_start();
-        include sprintf(__DIR__ . '/../../templates/%s.php', $routeInfo['name']);
+        $template = new Template(sprintf(__DIR__ . '/../../templates/%s.php', $routeInfo['name']));
 
-        return new Response(ob_get_clean());
+        if (!empty($routeInfo['template_vars'])) {
+            foreach (array_keys($routeInfo['template_vars']) as $key) {
+                $template->set($key, $routeInfo['template_vars'][$key]);
+            }
+        }
+
+        return new Response($template->render());
     }
 }

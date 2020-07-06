@@ -9,7 +9,7 @@ include_once __DIR__ . '/partials/head.php';
     include_once __DIR__ . '/partials/header.php';
     ?>
     <div class="container" role="main">
-        <h3>Discover useful infos about your favorite Pok&eacute;mon:</h3>
+        <h3><?php echo  $tpl__msg ?? '';  ?> Discover useful infos about your favorite Pok&eacute;mon:</h3>
         <form action="" method="post">
             <fieldset>
                 <div class="form-input-group">
