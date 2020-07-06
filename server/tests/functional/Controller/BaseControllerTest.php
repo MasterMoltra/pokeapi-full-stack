@@ -27,11 +27,13 @@ class BaseControllerTest extends \Codeception\Test\Unit
     public function routesDataProvider(): array
     {
         return [
-            ['/', 'GET', 200],
-            ['/dash', 'GET', 200],
-            ['wrongroute', 'GET', 404],
-            ['/php/pokeinfos', 'GET'],
-            ['/php/pokeinfos', 'POST'],
+            ['/',               'GET',  [],                         200],
+            ['/dash',           'GET',  [],                         200],
+            ['wrongroute',      'GET',  [],                         404],
+            ['/php/pokeinfos',  'GET',  ['name=bulbasaur']],
+            ['/php/pokeinfos',  'POST', ['name' => 'bulbasaur']],
+            ['/api',            'GET',  ['name=Flabébé'],         200],
+            ['/api',            'POST', ['name' => 'bulbasaur'],    500],
         ];
     }
 
@@ -39,9 +41,10 @@ class BaseControllerTest extends \Codeception\Test\Unit
      * @test
      * @dataProvider routesDataProvider
      */
-    public function testControllerRenderResponseCode(
+    public function testControllerRenderResponseStatusCode(
         string $uri,
         string $method,
+        array $params,
         ?int $expected = null
     ): void {
         if (null === $expected) {
@@ -55,18 +58,13 @@ class BaseControllerTest extends \Codeception\Test\Unit
         if ('GET' === $method) {
             $this->client->_request(
                 $method,
-                $uri . '?name=bulbasaur&metadata[method]=' . $method
+                $uri . '?' . implode($params)
             );
         } else {
             $this->client->_request(
                 $method,
                 $uri,
-                [
-                    'name' => 'bulbasaur',
-                    'metadata' => [
-                        'method' => $method,
-                    ],
-                ]
+                $params
             );
         }
 
@@ -77,7 +75,7 @@ class BaseControllerTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function testControllerRenderJsonWithAsciiPath(): void
+    public function testControllerRenderValidJsonWithConvertedAsciiPath(): void
     {
         $this->client->_request('POST', '/php/pokeinfos', ['name' => 'Tapu Koko']);
         $this->assertEquals(200, $this->client->_getResponseStatusCode());
