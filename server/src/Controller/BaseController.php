@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Helpers\Utils;
 use App\Pokemon;
+use App\Service\SimpleCache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,7 +22,10 @@ class BaseController extends AbstractController
 
         $path = Utils::sanitizePathUrl($name);
         $channel = $metadata['mode'] ?? null;
-        $pokemon = new Pokemon($channel);
+        $pokemon = new Pokemon(
+            $channel,
+            SimpleCache::getInstance('pokeapi')
+        );
 
         switch ($channel) {
             case 'local':
@@ -120,7 +124,10 @@ class BaseController extends AbstractController
      */
     public function htmlStaticSeoByPath(string $name): Response
     {
-        $pokemon = new Pokemon('local'); // NOTICE: Force LOCAL mode
+        $pokemon = new Pokemon(
+            'local', // NOTICE: Force LOCAL mode
+            SimpleCache::getInstance('pokeapi')
+        );
         $arrayPokeList = $pokemon->getLocalRootJson();
         $path = Utils::sanitizePathUrl($name);
         $pokeKey = array_search(

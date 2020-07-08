@@ -3,17 +3,13 @@
 namespace App;
 
 use App\Helpers\Utils;
+use Symfony\Component\Cache\Psr16Cache;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class Pokemon
 {
     /**
-     * @var string Base url of the public Api
-     */
-    private const API_URL = 'https://pokeapi.co/api/v2/pokemon';
-
-    /**
-     * @var string Base path of the local Json directories
+     * @var string Base path of the root local directories
      */
     private const LOCAL_DIR = __DIR__ . '/../..';
 
@@ -22,20 +18,30 @@ class Pokemon
      */
     private const LOCAL_ROOT_JSON = self::LOCAL_DIR . '/api/v2/pokemon/index.json';
 
+    /**
+     * @var string Base url of the public Api
+     */
+    private const API_URL = 'https://pokeapi.co/api/v2/pokemon';
+
     /** @var null|array */
     protected $data;
 
     /** @var string */
     protected $channel;
 
+    /** @var null|Psr16Cache */
+    protected $cache;
+
     /**
      * Init Pokemon class.
      *
-     * @param null|string $channel A channel to retrieve the data (e.g. local | api)
+     * @param null|string     $channel A channel to retrieve the data (e.g. local | api)
+     * @param null|Psr16Cache $cache   Cache service that implement psr-16
      */
-    public function __construct(?string $channel)
+    public function __construct(?string $channel, Psr16Cache $cache = null)
     {
         $this->channel = $channel ?? 'local';
+        $this->cache = $cache;
     }
 
     /**
@@ -95,6 +101,14 @@ class Pokemon
      */
     protected function generateFromLocal(string $path): ?array
     {
+        $cache_key = urlencode('local-' . $path);
+
+        if (null !== $this->cache && $this->cache->has($cache_key)) {
+            Utils::logRequestInfo(null, ['LOCAL' => $path . ' read from the CACHE!'], 'cache');
+
+            return $this->cache->get($cache_key);
+        }
+
         // Utils::logRequestInfo(null, ['LOCAL' => self::LOCAL_DIR . $path]);
         $fullJsonPath = self::LOCAL_DIR . $path  . '/index.json';
         if (!is_readable($fullJsonPath)) {
@@ -102,8 +116,13 @@ class Pokemon
         }
 
         $json = file_get_contents($fullJsonPath);
+        $data = json_decode($json, true);
 
-        return json_decode($json, true);
+        if (null !== $this->cache && $data) {
+            $this->cache->set($cache_key, $data);
+        }
+
+        return $data;
     }
 
     /**
@@ -113,10 +132,23 @@ class Pokemon
      */
     protected function generateFromApi(string $path): ?array
     {
+        $cache_key = urlencode('api-' . $path);
+
+        if ($this->cache->has($cache_key)) {
+            Utils::logRequestInfo(null, ['API' => $path . ' read from the CACHE!'], 'cache');
+
+            return $this->cache->get($cache_key);
+        }
+
         // Utils::logRequestInfo(null, ['API' => self::API_URL . '/' . $path]);
         $json = $this->getExternalRequest(self::API_URL . '/' . $path);
+        $data = json_decode($json, true);
 
-        return  json_decode($json, true);
+        if ($data) {
+            $this->cache->set($cache_key, $data);
+        }
+
+        return $data;
     }
 
     private function getExternalRequest(string $url)
