@@ -16,8 +16,7 @@ class Utils
         ?array $extra = null,
         ?string $name = null
     ): void {
-
-        $fileName = $name ? $name . '_' : (null === $request ? 'logs_'  : 'requests_');
+        $fileName = $name ? $name . '_' : (null === $request ? 'logs_' : 'requests_');
         $fileName .= date('j.n.Y');
 
         $objects = null === $request ?
@@ -32,10 +31,16 @@ class Utils
             $objects = array_merge($objects, $extra);
         }
 
+        file_put_contents(
+            self::LOG_DIR . '/' . $fileName  . '.log',
+            "\r\n\r\n ---------------------------------------- \r\n " . date('H:i:s'),
+            FILE_APPEND
+        );
+
         foreach ($objects as $key => $obj) {
             file_put_contents(
                 self::LOG_DIR . '/' . $fileName  . '.log',
-                "\r\n-----------------{$key}---------------\r\n" . print_r($obj, true),
+                "\r\n ----- {$key} ----- \r\n" . print_r($obj, true),
                 FILE_APPEND
             );
         }
