@@ -62,6 +62,10 @@ class BaseController extends AbstractController
             if (!$data) {
                 $outputData .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
             } else {
+                // Notify if the output is from cached data
+                $outputData .= $data['__from__'] ?
+                    '<div class="block-highlight">' . $data['__from__'] . '</div>' :
+                    '';
                 $outputData .= !empty($data['name']) ?
                     '<h2>' . ucfirst($data['name']) . '</h2>' : '';
 
@@ -164,7 +168,11 @@ class BaseController extends AbstractController
     protected function pokemonRenderSeoBox(array $data): string
     {
         $outputData = '<div class="box">';
-        $outputData .= '<h2>' . ucfirst($data['name']) . '</h2>';
+        // Notify if the output is from cached data
+        $outputData .= $data['__from__'] ?
+            '<div class="block-highlight">' . $data['__from__'] . '</div>' :
+            '';
+        $outputData .= '<h1>' . ucfirst($data['name']) . '</h1>';
 
         $imageUrl = $data['sprites']['front_defaultz'] ??
             $data['sprites']['front_shiny'] ??

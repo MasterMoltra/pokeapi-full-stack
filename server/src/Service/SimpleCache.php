@@ -15,7 +15,7 @@ class SimpleCache
     /**
      * @var string Default lifetime (in seconds) for cache
      */
-    private const CACHE_LIFETIME = 300;
+    private const CACHE_LIFETIME = 0;
 
     /** @var Psr16Cache[] */
     private static $cache;
@@ -30,15 +30,14 @@ class SimpleCache
     /**
      * Get instance of Simple Cache service.
      *
-     * @param string   $namespace Optional cache namespace(subdirectory)
-     * @param null|int $lifetime  Time (in seconds) for cache expiring
+     * @param string $namespace Optional cache namespace(subdirectory)
      */
-    public static function getInstance(string $namespace = '', ?int $lifetime = null)
+    public static function getInstance(string $namespace = '')
     {
-        if (empty(self::$cache[$namespace]) || is_int($lifetime)) {
+        if (empty(self::$cache[$namespace])) {
             $psr6Cache = new FilesystemAdapter(
                 $namespace,
-                is_int($lifetime) ? $lifetime : self::CACHE_LIFETIME,
+                self::CACHE_LIFETIME,
                 self::CACHE_DIR
             );
             // a PSR-16 cache that uses your cache internally!

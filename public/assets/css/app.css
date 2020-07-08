@@ -78,7 +78,7 @@ header.scroll-minimize > img {
     padding: 10px;
     width: 50%;
     margin: 10px auto;
-    background: rgba(217, 248, 210, 0.8);
+    background-color: rgba(217, 248, 210, 0.8);
     border: 2px dotted #ef5350;
     text-align: center;
 }
@@ -104,7 +104,7 @@ fieldset .form-input-group > span {
 }
 
 fieldset:focus-within {
-    background: #ff8;
+    background-color: #ff8;
 }
 fieldset label {
     display: inline-block;
@@ -199,6 +199,15 @@ footer p {
 .button-disabled-wrapper {
     cursor: not-allowed;
     background: rgba(233, 227, 227, 0.8);
+}
+
+.block-highlight {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 5px;
+    margin: 0;
+    color: #ff0000;
+    background: #ff8;
 }
 
 .spin-loader {

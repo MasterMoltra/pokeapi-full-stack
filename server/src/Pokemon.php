@@ -23,6 +23,11 @@ class Pokemon
      */
     private const API_URL = 'https://pokeapi.co/api/v2/pokemon';
 
+    /**
+     * @var string Default lifetime (in seconds) for cache
+     */
+    private const CACHE_LIFETIME = 300;
+
     /** @var null|array */
     protected $data;
 
@@ -104,7 +109,7 @@ class Pokemon
         $cache_key = urlencode('local-' . $path);
 
         if (null !== $this->cache && $this->cache->has($cache_key)) {
-            Utils::logRequestInfo(null, ['LOCAL' => $path . ' read from the CACHE!'], 'cache');
+            // Utils::logRequestInfo(null, ['LOCAL' => $path . ' read from the LOCAL!'], 'cache');
 
             return $this->cache->get($cache_key);
         }
@@ -119,7 +124,14 @@ class Pokemon
         $data = json_decode($json, true);
 
         if (null !== $this->cache && $data) {
-            $this->cache->set($cache_key, $data);
+            // Save data in cache with a notice to send with the response
+            $cachedData = array_merge(
+                $data,
+                [
+                    '__from__' => 'LOCAL data will be get from CACHE for ' . (self::CACHE_LIFETIME / 60) . ' minutes!',
+                ]
+            );
+            $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME);
         }
 
         return $data;
@@ -135,7 +147,7 @@ class Pokemon
         $cache_key = urlencode('api-' . $path);
 
         if ($this->cache->has($cache_key)) {
-            Utils::logRequestInfo(null, ['API' => $path . ' read from the CACHE!'], 'cache');
+            // Utils::logRequestInfo(null, ['API' => $path . ' read from the CACHE!'], 'cache');
 
             return $this->cache->get($cache_key);
         }
@@ -145,7 +157,14 @@ class Pokemon
         $data = json_decode($json, true);
 
         if ($data) {
-            $this->cache->set($cache_key, $data);
+            // Save data in cache with a notice to send with the response
+            $cachedData = array_merge(
+                $data,
+                [
+                    '__from__' => 'API data will be get from CACHE for ' . (self::CACHE_LIFETIME / 60) . ' minutes!',
+                ]
+            );
+            $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME);
         }
 
         return $data;
