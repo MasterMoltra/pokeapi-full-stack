@@ -36,7 +36,8 @@
         "phpcs": "phpcs --standard=PSR12 --extensions=php server/src public",
         "phpcs-test": "phpcs --standard=PSR12 --ignore=server/tests/_support/* --extensions=php --exclude=PSR2.Methods.MethodDeclaration server/tests",
         "phpstan": "phpstan analyse -c phpstan.neon",
-        "phpfixer": "php-cs-fixer fix --config=.php_cs.dist -v"
+        "phpfixer": "./bin/php-cs-fixer fix --config=.php_cs.dist -v",
+        "check-phpfixer": "./bin/php-cs-fixer fix --config=.php_cs.dist --dry-run --diff --diff-format=udiff"
     },
     "license": "MIT"
 }
