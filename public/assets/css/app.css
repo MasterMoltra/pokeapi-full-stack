@@ -1,9 +1,6 @@
 body {
     max-height: 100%;
     font-family: Arial, Helvetica, sans-serif;
-    background-image: url('/assets/images/pokeapi.png');
-    background-position: bottom center;
-    background-repeat: no-repeat;
     background-color: #ccd7ec;
 }
 
@@ -20,6 +17,7 @@ header {
     padding: 10px 20px;
     box-shadow: 0 0 5px #221e1e;
     transition: height 1s;
+    z-index: 9999;
 }
 header h1 {
     display: inline-block;
@@ -53,10 +51,34 @@ header.scroll-minimize > img {
     width: 90%;
     box-sizing: border-box;
     background-color: #fff;
-    margin: 70px auto 100px;
+    margin: 70px auto;
     padding: 20px 10px;
-    background: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     box-shadow: 0 0 5px #221e1e;
+}
+.container .content {
+    position: relative;
+    min-height: 100px;
+    margin-top: 10px;
+}
+.container .content::after {
+    content: '';
+    background: url(image.jpg);
+    background-image: url('/assets/images/pokeapi.png');
+    background-position: 50% 30%;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+.container h3 {
+    font-size: 20px;
+    text-align: center;
+    color: #3760a8;
 }
 .container h4 {
     text-align: center;
@@ -66,11 +88,6 @@ header.scroll-minimize > img {
 .container h4 > span {
     font-size: 10px;
     color: #696969;
-}
-
-.container h3 {
-    font-size: 20px;
-    color: #3760a8;
 }
 
 .box {
@@ -162,6 +179,10 @@ footer p {
 }
 
 @media only screen and (max-width: 960px) {
+    .box {
+        width: auto;
+    }
+
     fieldset .form-input-group {
         display: block;
         text-align: center;
@@ -187,14 +208,12 @@ footer p {
     .container h4 > span {
         display: block;
     }
-    .box {
-        width: auto;
-    }
 }
 
 /** Extra template elements */
 .error-bg {
     background-color: rgba(252, 211, 211, 0.8);
+    padding: 10px;
 }
 .button-disabled-wrapper {
     cursor: not-allowed;
