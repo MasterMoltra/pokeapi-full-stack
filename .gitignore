@@ -3,7 +3,8 @@
 /cache/
 /docs/
 /var/cache/
-/api/
+/api/*
+!/api/v2.zip
 /data/
 .env
 .php_cs*
