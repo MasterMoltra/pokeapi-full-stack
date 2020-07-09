@@ -11,6 +11,14 @@ class Utils
      */
     private const LOG_DIR = __DIR__ . '/../../../var/php';
 
+    /**
+     * @var string The main local pokemon Json (with the full list of pokemon)
+     */
+    private const LOCAL_ROOT_JSON = __DIR__ . '/../../../api/v2/pokemon/index.json';
+
+    /**
+     * To generate a readable log file of the request.
+     */
     public static function logRequestInfo(
         ?Request $request = null,
         ?array $extra = null,
@@ -46,6 +54,11 @@ class Utils
         }
     }
 
+    /**
+     * Convert a string to a valid ascii url.
+     *
+     * @param string $path Full sting to sanitize
+     */
     public static function sanitizePathUrl(string $path): string
     {
         $path = strtolower(
@@ -58,5 +71,15 @@ class Utils
         $path = preg_replace('/[[:space:]]+/', '-', $path);
 
         return preg_replace('/[^a-zA-Z-]/', '', $path);
+    }
+
+    /**
+     * Return a local path of the root Json file if it exsist.
+     *
+     * @return null|string
+     */
+    public static function getLocalRootJson()
+    {
+        return is_readable(self::LOCAL_ROOT_JSON) ? self::LOCAL_ROOT_JSON : null;
     }
 }

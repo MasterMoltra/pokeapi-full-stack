@@ -14,19 +14,14 @@ class Pokemon
     private const LOCAL_DIR = __DIR__ . '/../..';
 
     /**
-     * @var string The main local pokemon Json (with the full list of pokemon)
-     */
-    private const LOCAL_ROOT_JSON = self::LOCAL_DIR . '/api/v2/pokemon/index.json';
-
-    /**
      * @var string Base url of the public Api
      */
     private const API_URL = 'https://pokeapi.co/api/v2/pokemon';
 
     /**
-     * @var string Default lifetime (in seconds) for cache
+     * @var int[] Default lifetime (in seconds) for cache
      */
-    private const CACHE_LIFETIME = 300;
+    private const CACHE_LIFETIME = ['local' => 120, 'api' => 300];
 
     /** @var null|array */
     protected $data;
@@ -63,12 +58,12 @@ class Pokemon
 
     public function getLocalRootJson(bool $onlyCheck = false)
     {
-        if (!is_readable(self::LOCAL_ROOT_JSON)) {
+        if (!$jsonPathRoot = Utils::getLocalRootJson()) {
             return $onlyCheck ? false : null;
             // throw new  FileNotFoundException('Local files not founds');
         }
 
-        $json = file_get_contents(self::LOCAL_ROOT_JSON);
+        $json = file_get_contents($jsonPathRoot);
 
         return json_decode($json, true);
     }
@@ -100,7 +95,7 @@ class Pokemon
     }
 
     /**
-     * Retrieve json data with a full path.
+     * Retrieve json data with a local file.
      *
      * @param string $path Full path to get data
      */
@@ -125,13 +120,14 @@ class Pokemon
 
         if (null !== $this->cache && $data) {
             // Save data in cache with a notice to send with the response
+            $cacheLifetime = (self::CACHE_LIFETIME['local'] / 60);
             $cachedData = array_merge(
                 $data,
                 [
-                    '__from__' => 'LOCAL data will be get from CACHE for ' . (self::CACHE_LIFETIME / 60) . ' minutes!',
+                    '__from__' => 'LOCAL data will be get from CACHE for ' . $cacheLifetime . ' minutes!',
                 ]
             );
-            $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME);
+            $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME['local']);
         }
 
         return $data;
@@ -158,13 +154,14 @@ class Pokemon
 
         if ($data) {
             // Save data in cache with a notice to send with the response
+            $cacheLifetime = (self::CACHE_LIFETIME['api'] / 60);
             $cachedData = array_merge(
                 $data,
                 [
-                    '__from__' => 'API data will be get from CACHE for ' . (self::CACHE_LIFETIME / 60) . ' minutes!',
+                    '__from__' => 'API data will be get from CACHE for ' . $cacheLifetime . ' minutes!',
                 ]
             );
-            $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME);
+            $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME['api']);
         }
 
         return $data;

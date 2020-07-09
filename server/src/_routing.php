@@ -1,10 +1,13 @@
 <?php
 
+use App\Helpers\Utils;
+
 return [
     '/' => [
         'name' => 'home',
         'template_vars' => [
             'msg' => '<em>Welcome!</em> ',
+            'local' => (bool) Utils::getLocalRootJson(),
         ],
     ],
     '/dash' => [
