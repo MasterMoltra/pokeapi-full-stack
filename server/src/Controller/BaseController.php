@@ -6,6 +6,7 @@ use App\Helpers\Utils;
 use App\Pokemon;
 use App\Service\SimpleCache;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class BaseController extends AbstractController
@@ -31,14 +32,14 @@ class BaseController extends AbstractController
             case 'local':
                 /** Notice: local require searching in the root json file to retrieve the real path of the searched Pokemon */
                 $arrayPokeList = $pokemon->getLocalRootJson();
-                $pokeKey = array_search(
-                    $path,
-                    array_column($arrayPokeList['results'], 'name')
-                );
+                $pokeKey = $arrayPokeList ?
+                    array_search(
+                        $path,
+                        array_column($arrayPokeList['results'], 'name')
+                    ) :
+                    false;
 
-                $jsonUrl = false === $pokeKey ?
-                    null :
-                    $arrayPokeList['results'][$pokeKey]['url'];
+                $jsonUrl = is_int($pokeKey) ? $arrayPokeList['results'][$pokeKey]['url'] : null;
 
                 break;
             case 'api':
@@ -52,45 +53,18 @@ class BaseController extends AbstractController
         }
 
         // Box template output
-        $outputData = '';
+        $output = '';
         if (!$jsonUrl) {
-            $outputData .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
+            $output .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
         } else {
             // Get pokemon data
             $data = $pokemon->getData($jsonUrl);
 
             if (!$data) {
-                $outputData .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
+                $output .= '<h2 class="error-bg">Sorry, Pok&eacute;mon Not Found</h2>';
             } else {
-                // Notify if the output is from cached data
-                $outputData .= $data['__from__'] ?
-                    '<div class="block-highlight">' . $data['__from__'] . '</div>' :
-                    '';
-                $outputData .= !empty($data['name']) ?
-                    '<h2>' . ucfirst($data['name']) . '</h2>' : '';
-
-                $imageUrl =
-                    !empty($metadata['device']) &&
-                    'mobile' == $metadata['device'] ?
-                    $data['sprites']['back_default'] ?? $data['sprites']['front_shiny'] :
-                    $data['sprites']['front_default'];
-                $outputData .= $imageUrl ?
-                    "<div><img src=\"{$imageUrl}\" width=\"150\" /></div>"
-                    : '';
-
-                $outputData .= "ID.{$data['id']} - Weight {$data['weight']} - Height {$data['height']}";
-
-                $outputData .= '<p><strong>GAMES INDICIES:</strong><br>';
-                $gamesIndicies = '';
-                foreach ($data['game_indices'] as $key => $names) {
-                    foreach ($names as $name => $value) {
-                        if ('version' == $name) {
-                            $gamesIndicies .= "{$value['name']} | ";
-                        }
-                    }
-                }
-                $outputData .= $gamesIndicies ? rtrim($gamesIndicies, ' | ') : 'None!';
-                $outputData .= '</p>';
+                $output .= '<h2>' . ucfirst($data['name']) . '</h2>';
+                $output .= $this->pokemonRenderBoxData($data, $metadata);
             }
         }
 
@@ -110,7 +84,7 @@ class BaseController extends AbstractController
 
         $content = "
         <div class=\"box\">
-            {$outputData}
+            {$output}
         </div>
         <small>{$outputMetadata}</small>
         ";
@@ -134,56 +108,54 @@ class BaseController extends AbstractController
         );
         $arrayPokeList = $pokemon->getLocalRootJson();
         $path = Utils::sanitizePathUrl($name);
-        $pokeKey = array_search(
-            $path,
-            array_column($arrayPokeList['results'], 'name')
-        );
+        $pokeKey = $arrayPokeList ?
+            array_search(
+                $path,
+                array_column($arrayPokeList['results'], 'name')
+            ) :
+            false;
 
         if (false === $pokeKey) {
-            // TODO: redirect to home page
-            return new Response('Page Not Found !!!');
+            return new RedirectResponse('/');
         }
 
         $jsonUrl = $arrayPokeList['results'][$pokeKey]['url'];
         $data = $pokemon->getData($jsonUrl);
 
         if (!$data) {
-            // TODO: redirect to home page
-            return new Response('Page Not Found !!!');
+            return new RedirectResponse('/');
         }
 
         // Box template output
-        $content = '<!DOCTYPE html><html lang="en">';
-        $content .= file_get_contents(__DIR__ . '/../../templates/partials/head.php');
-        $content .= '<body>';
-        $content .= $this->pokemonRenderSeoBox($data);
-        $content .= '</body></html>';
+        $output = '<!DOCTYPE html><html lang="en">';
+        $output .= file_get_contents(__DIR__ . '/../../templates/partials/head.php');
+        $output .= '<body>';
+        $output .= '<div class="box">';
+        $output .= '<h1>' . ucfirst($data['name']) . ' (Seo static render)</h1>';
+        $output .= $this->pokemonRenderBoxData($data);
+        $output .= '</div></body></html>';
 
-        return new Response($content);
+        return new Response($output);
     }
 
     /**
-     * Generate a single Html pokemon block box.
+     * Generate a pokemon html block content.
      */
-    protected function pokemonRenderSeoBox(array $data): string
+    protected function pokemonRenderBoxData(array $data, ?array $metadata = null): string
     {
-        $outputData = '<div class="box">';
-        // Notify if the output is from cached data
-        $outputData .= $data['__from__'] ?
-            '<div class="block-highlight">' . $data['__from__'] . '</div>' :
-            '';
-        $outputData .= '<h1>' . ucfirst($data['name']) . '</h1>';
-
-        $imageUrl = $data['sprites']['front_defaultz'] ??
-            $data['sprites']['front_shiny'] ??
-            $data['sprites']['back_default'];
-        $outputData .= $imageUrl ?
+        $output = '';
+        // Print image (by device if detected)
+        $imageUrl = !empty($metadata['device']) &&
+            'mobile' == $metadata['device'] ?
+            $data['sprites']['back_default'] ?? $data['sprites']['front_shiny'] :
+            $data['sprites']['front_default'];
+        $output .= $imageUrl ?
             "<div><img src=\"{$imageUrl}\" width=\"150\" /></div>"
             : '';
-
-        $outputData .= "ID.{$data['id']} - Weight {$data['weight']} - Height {$data['height']}";
-
-        $outputData .= '<p><strong>GAMES INDICIES:</strong><br>';
+        // Print some ramndom infos
+        $output .= "ID.{$data['id']} - Weight {$data['weight']} - Height {$data['height']}";
+        // Print indicies block
+        $output .= '<p><strong>GAMES INDICIES:</strong><br>';
         $gamesIndicies = '';
         foreach ($data['game_indices'] as $key => $names) {
             foreach ($names as $name => $value) {
@@ -192,10 +164,13 @@ class BaseController extends AbstractController
                 }
             }
         }
-        $outputData .= $gamesIndicies ? rtrim($gamesIndicies, ' | ') : 'None!';
-        $outputData .= '</p>';
-        $outputData .= '</div>';
+        $output .= $gamesIndicies ? rtrim($gamesIndicies, ' | ') : 'None!';
+        $output .= '</p>';
+        // Notify if output is from cached data
+        $output .= $data['__from__'] ?
+            '<div class="block-highlight">' . $data['__from__'] . '</div>' :
+            '';
 
-        return $outputData;
+        return $output;
     }
 }
