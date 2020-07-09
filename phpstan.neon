@@ -6,7 +6,7 @@ parameters:
         - public
     ignoreErrors:
     -
-        message: '#PHPDoc tag.*[a-zA-Z0-9\\_]+#'
+        message: '#.*[a-zA-Z0-9\\_]+#'
         paths:
             - server/tests/_support/_generated/*
     fileExtensions:
