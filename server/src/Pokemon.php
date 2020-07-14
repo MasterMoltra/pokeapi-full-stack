@@ -4,7 +4,6 @@ namespace App;
 
 use App\Helpers\Utils;
 use Symfony\Component\Cache\Psr16Cache;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class Pokemon
 {
@@ -86,7 +85,7 @@ class Pokemon
 
                 break;
             default:
-                throw new BadRequestException("Channel {$this->channel} is not allowed");
+                throw new \InvalidArgumentException("Channel {$this->channel} is not allowed");
 
                 break;
         }

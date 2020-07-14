@@ -70,7 +70,7 @@ class BaseController extends AbstractController
 
         // Device client infos output
         $outputMetadata = '<p style="text-align:center;">';
-        foreach ($metadata as $key => $value) {
+        foreach ((array) $metadata as $key => $value) {
             if ('device' === $key || 'display' === $key) {
                 $sanitizedData = filter_var(
                     $value,
@@ -167,7 +167,7 @@ class BaseController extends AbstractController
         $output .= $gamesIndicies ? rtrim($gamesIndicies, ' | ') : 'None!';
         $output .= '</p>';
         // Notify if output is from cached data
-        $output .= $data['__from__'] ?
+        $output .= !empty($data['__from__']) ?
             '<div class="block-highlight">' . $data['__from__'] . '</div>' :
             '';
 

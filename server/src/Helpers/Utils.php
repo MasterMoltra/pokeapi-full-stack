@@ -61,6 +61,8 @@ class Utils
      */
     public static function sanitizePathUrl(string $path): string
     {
+        //  WARNING: you must check LC_CTYPE is correctly setted on server (and not 'POSIX' or 'C)
+        // Otherwise any special char (àèìòù...) will be truncate by iconv()
         $path = strtolower(
             iconv(
                 'UTF-8',

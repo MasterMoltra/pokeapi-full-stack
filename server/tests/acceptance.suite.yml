@@ -8,6 +8,6 @@ actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-              url: https://localhost:8000/
+              url: '%ENV_CODECEPT_URL%'
         - \Test\Helper\Acceptance
     step_decorators: ~

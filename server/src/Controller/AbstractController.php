@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Helpers\Utils;
 use App\Template;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,7 +16,7 @@ abstract class AbstractController
             !empty($routeInfo['allowed_methods']) &&
             !in_array($method, $routeInfo['allowed_methods'])
         ) {
-            throw new BadRequestException("Method {$method} not allowed");
+            throw new \BadMethodCallException("Method {$method} not allowed");
         }
 
         // Get data from a controller Action

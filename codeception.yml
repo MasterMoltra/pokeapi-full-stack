@@ -9,3 +9,7 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+params:
+    # NOTICE: remove comment below if you are using DOCKER, and vice versa
+    # - docker/.env
+    - server/tests/.env.nodocker
