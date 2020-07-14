@@ -1,0 +1,72 @@
+version: '3.4'
+
+x-php-common-args: &php-common-args
+    CONTAINER_USER: ${ENV_CONTAINER_USER}
+    CONTAINER_USER_PID: ${ENV_CONTAINER_USER_PID}
+
+x-php-common-volumes: &php-common-volumes
+    volumes:
+        - /var/www/vendor
+        - ../:/var/www
+
+x-network-common: &network-common
+    server-network:
+        aliases:
+            - ${ENV_HOST_DOMAIN}
+
+services:
+    server_nginx:
+        image: mm_server_nginx
+        build:
+            context: ./server/nginx
+            dockerfile: Dockerfile
+            args:
+                HOST_DOMAIN: ${ENV_HOST_DOMAIN}
+        volumes:
+            - ../:/var/www:cached
+            - ../var/log/nginx:/var/log/nginx:cached
+        ports:
+            - '80:80'
+            - '8000:8000'
+            - '8001:8001'
+            - '5000:5000'
+        networks:
+            <<: *network-common
+        depends_on:
+            - server_php_fpm_prod
+            - server_php_fpm_dev
+    server_node:
+        image: mm_server_node
+        build:
+            context: ../server/node
+            dockerfile: ../../docker/server/node/Dockerfile
+        volumes:
+            - /app/node_modules
+            - ../server/node:/app
+        networks:
+            <<: *network-common
+    server_php_fpm_prod:
+        image: mm_server_php_fpm_prod-${ENV_PHP_VERSION_PROD}
+        build:
+            context: ./server/php
+            dockerfile: Dockerfile.prod
+            args:
+                PHP_VERSION: ${ENV_PHP_VERSION_PROD}
+                <<: *php-common-args
+        <<: *php-common-volumes
+        networks:
+            <<: *network-common
+    server_php_fpm_dev:
+        image: mm_server_php_fpm_dev-${ENV_PHP_VERSION_DEV}
+        build:
+            context: ./server/php
+            dockerfile: ./Dockerfile.dev
+            args:
+                PHP_VERSION: ${ENV_PHP_VERSION_DEV}
+                <<: *php-common-args
+        <<: *php-common-volumes
+        networks:
+            <<: *network-common
+
+networks:
+    server-network:

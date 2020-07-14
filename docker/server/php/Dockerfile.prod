@@ -1,0 +1,62 @@
+FROM mastermoltra/custom-debian:latest
+
+USER root
+
+ARG PHP_VERSION
+ARG CONTAINER_USER
+ARG CONTAINER_USER_PID
+
+# WARNING: ONLY for DEV/DEBUG purposes
+# Create a new SUDO user (it should be equal to your local machine)
+# Install required packages
+RUN  apt-get update -qq \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo lsof
+# Add a new user on the container
+RUN groupadd -g ${CONTAINER_USER_PID} ${CONTAINER_USER}
+RUN useradd -g ${CONTAINER_USER_PID} -l -m -s /bin/bash -u ${CONTAINER_USER_PID} ${CONTAINER_USER}
+# Append the user to sudo group without require the password (optional)
+RUN usermod -aG sudo ${CONTAINER_USER} 
+RUN echo "${CONTAINER_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Install PHP extensions (see docker/.env for the version choise)
+RUN  apt-get update -qq \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y php${PHP_VERSION} \
+    php${PHP_VERSION}-common php${PHP_VERSION}-cli php${PHP_VERSION}-fpm \
+    php${PHP_VERSION}-mysql  php${PHP_VERSION}-curl php${PHP_VERSION}-xml  \
+    php${PHP_VERSION}-mbstring php${PHP_VERSION}-intl php${PHP_VERSION}-redis \
+    php${PHP_VERSION}-zip php${PHP_VERSION}-imagick
+
+# Install composer (CONTAINER_USER LEVEL)
+ENV COMPOSER_HOME /home/${CONTAINER_USER}/.composer
+ENV PATH ./vendor/bin:${COMPOSER_HOME}/vendor/bin:/root/.composer/vendor/bin:$PATH
+RUN install -d -m 0755 -o ${CONTAINER_USER} -g ${CONTAINER_USER} ${COMPOSER_HOME} &&\
+    curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/local/bin \
+    --filename=composer
+RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} ${COMPOSER_HOME}
+
+# Install OhMyZSH shell (CONTAINER_USER LEVEL)
+RUN set -uex; \
+    cd /home/${CONTAINER_USER} && wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh; \
+    su - ${CONTAINER_USER} -c "sh ./install.sh"; \
+    rm ./install.sh
+
+# Make the default directory you
+WORKDIR /var/www
+
+# Save FPM conf files into non-versioned directory by PHP_VERSION environment
+COPY ./config/fpm.conf  /etc/php/fpm.conf
+RUN chmod 644 /etc/php/fpm.conf
+RUN sed -i -r "s/\{PHP_VERSION\}/${PHP_VERSION}/g" /etc/php/fpm.conf
+RUN ln -s /etc/php/fpm.conf /etc/php/${PHP_VERSION}/fpm/fpm.conf
+
+# Standardize PHP-FPM executable location
+RUN rm -f /usr/sbin/php-fpm &&\
+    ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
+
+# PID directory
+RUN install -d -m 0755 -o www-data -g www-data /var/run/php-fpm
+
+CMD ["/usr/sbin/php-fpm", "--nodaemonize", "--fpm-config=/etc/php/fpm.conf", "-c", "/var/www/docker/server/php/config/php.ini"]
+
+EXPOSE 9000
