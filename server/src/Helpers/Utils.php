@@ -9,7 +9,7 @@ class Utils
     /**
      * @var string
      */
-    private const LOG_DIR = __DIR__ . '/../../../var/php';
+    private const LOG_DIR = __DIR__ . '/../../../var/log/php';
 
     /**
      * @var string The main local pokemon Json (with the full list of pokemon)
