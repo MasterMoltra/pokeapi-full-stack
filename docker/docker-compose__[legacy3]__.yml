@@ -16,6 +16,10 @@ services:
             - '8000:8000'
             - '8001:8001'
             - '5000:5000'
+        networks:
+            server-network:
+                aliases:
+                    - ${ENV_HOST_DOMAIN}
         depends_on:
             - server_php_fpm_prod
             - server_php_fpm_dev
@@ -27,6 +31,10 @@ services:
         volumes:
             - /app/node_modules
             - ../server/node:/app
+        networks:
+            server-network:
+                aliases:
+                    - ${ENV_HOST_DOMAIN}
     server_php_fpm_prod:
         image: mm_server_php_fpm_prod-${ENV_PHP_VERSION_PROD}
         build:
@@ -39,9 +47,10 @@ services:
         volumes:
             - /var/www/vendor
             - ../:/var/www
-        # WARNING: IP must replaced with the server_nginx container IP
-        extra_hosts:
-            - '${ENV_HOST_DOMAIN}:172.18.0.5'
+        networks:
+            server-network:
+                aliases:
+                    - ${ENV_HOST_DOMAIN}
     server_php_fpm_dev:
         image: mm_server_php_fpm_dev-${ENV_PHP_VERSION_DEV}
         build:
@@ -54,6 +63,10 @@ services:
         volumes:
             - /var/www/vendor
             - ../:/var/www
-        # WARNING: IP must replaced with the server_nginx container IP
-        extra_hosts:
-            - '${ENV_HOST_DOMAIN}:172.18.0.5'
+        networks:
+            server-network:
+                aliases:
+                    - ${ENV_HOST_DOMAIN}
+
+networks:
+    server-network:
