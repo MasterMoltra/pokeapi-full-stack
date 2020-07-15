@@ -9,7 +9,7 @@ ARG CONTAINER_USER
 # Install PHP_CodeSniffer (CONTAINER_USER LEVEL)
 RUN set -uex; \
     cd /home/${CONTAINER_USER}; \
-    su - ${CONTAINER_USER} -c "composer global require 'squizlabs/php_codesniffer=*'"
+    su - ${CONTAINER_USER} -c "composer global require 'friendsofphp/php-cs-fixer=*'"
 
 # install Xdebug (7.x for the version choise you have to watch .env)
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug
