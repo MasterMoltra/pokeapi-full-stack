@@ -20,14 +20,17 @@ services:
             server-network:
                 aliases:
                     - ${ENV_HOST_DOMAIN}
+                ipv4_address: ${ENV_HOST_NGINX_IP}
         depends_on:
             - server_php_fpm_prod
             - server_php_fpm_dev
     server_node:
-        image: mm_server_node
+        image: mm_server_node-${ENV_NODE_VERSION}
         build:
             context: ../server/node
             dockerfile: ../../docker/server/node/Dockerfile
+            args:
+                NODE_VERSION: ${ENV_NODE_VERSION}
         volumes:
             - /app/node_modules
             - ../server/node:/app
@@ -45,7 +48,7 @@ services:
                 CONTAINER_USER: ${ENV_CONTAINER_USER}
                 CONTAINER_USER_PID: ${ENV_CONTAINER_USER_PID}
         volumes:
-            - /var/www/vendor
+            #- /var/www/vendor
             - ../:/var/www
         networks:
             server-network:
@@ -61,7 +64,7 @@ services:
                 CONTAINER_USER: ${ENV_CONTAINER_USER}
                 CONTAINER_USER_PID: ${ENV_CONTAINER_USER_PID}
         volumes:
-            - /var/www/vendor
+            #- /var/www/vendor
             - ../:/var/www
         networks:
             server-network:

@@ -1,11 +1,12 @@
-FROM node:14.5-alpine
+ARG NODE_VERSION
+FROM node:${NODE_VERSION}
 
 WORKDIR /app
 
 COPY package.json .
-RUN yarn
+RUN npm install
 
 COPY . .
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
 
 EXPOSE 3000

@@ -6,13 +6,12 @@ x-php-common-args: &php-common-args
 
 x-php-common-volumes: &php-common-volumes
     volumes:
-        - /var/www/vendor
+        #- /var/www/vendor
         - ../:/var/www
 
 x-network-common: &network-common
-    server-network:
-        aliases:
-            - ${ENV_HOST_DOMAIN}
+    aliases:
+        - ${ENV_HOST_DOMAIN}
 
 services:
     server_nginx:
@@ -31,20 +30,25 @@ services:
             - '8001:8001'
             - '5000:5000'
         networks:
-            <<: *network-common
+            server-network:
+                <<: *network-common
+                ipv4_address: ${ENV_HOST_NGINX_IP}
         depends_on:
             - server_php_fpm_prod
             - server_php_fpm_dev
     server_node:
-        image: mm_server_node
+        image: mm_server_node-${ENV_NODE_VERSION}
         build:
             context: ../server/node
             dockerfile: ../../docker/server/node/Dockerfile
+            args:
+                NODE_VERSION: ${ENV_NODE_VERSION}
         volumes:
             - /app/node_modules
             - ../server/node:/app
         networks:
-            <<: *network-common
+            server-network:
+                <<: *network-common
     server_php_fpm_prod:
         image: mm_server_php_fpm_prod-${ENV_PHP_VERSION_PROD}
         build:
@@ -55,7 +59,8 @@ services:
                 <<: *php-common-args
         <<: *php-common-volumes
         networks:
-            <<: *network-common
+            server-network:
+                <<: *network-common
     server_php_fpm_dev:
         image: mm_server_php_fpm_dev-${ENV_PHP_VERSION_DEV}
         build:
@@ -66,7 +71,8 @@ services:
                 <<: *php-common-args
         <<: *php-common-volumes
         networks:
-            <<: *network-common
+            server-network:
+                <<: *network-common
 
 networks:
     server-network:
