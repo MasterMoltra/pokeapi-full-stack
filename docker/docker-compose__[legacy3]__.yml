@@ -27,13 +27,17 @@ services:
     server_node:
         image: mm_server_node-${ENV_NODE_VERSION}
         build:
-            context: ../server/node
-            dockerfile: ../../docker/server/node/Dockerfile
+            context: ../node
+            dockerfile: ../docker/node/Dockerfile
             args:
                 NODE_VERSION: ${ENV_NODE_VERSION}
         volumes:
-            - /app/node_modules
-            - ../server/node:/app
+            - /app/dist/node_modules
+            #- /app/var/cache/node
+            - ../node:/app/dist
+            - ../api:/app/api
+            - ../var/cache/node:/app/var/cache/node
+            - ../var/log/node:/app/var/log/node
         networks:
             server-network:
                 aliases:
@@ -48,6 +52,8 @@ services:
                 CONTAINER_USER: ${ENV_CONTAINER_USER}
                 CONTAINER_USER_PID: ${ENV_CONTAINER_USER_PID}
         volumes:
+            - /var/www/.git
+            # - /var/www/var/cache
             #- /var/www/vendor
             - ../:/var/www
         networks:
@@ -64,6 +70,8 @@ services:
                 CONTAINER_USER: ${ENV_CONTAINER_USER}
                 CONTAINER_USER_PID: ${ENV_CONTAINER_USER_PID}
         volumes:
+            - /var/www/.git
+            #- /var/www/var/cache
             #- /var/www/vendor
             - ../:/var/www
         networks:
