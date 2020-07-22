@@ -46,5 +46,11 @@
         "phpfixer": "./bin/php-cs-fixer fix --config=.php_cs.dist -v",
         "check-phpfixer": "./bin/php-cs-fixer fix --config=.php_cs.dist --dry-run --diff --diff-format=udiff"
     },
+    "authors": [
+        {
+            "name": "Moltrasi Marco",
+            "homepage": "https://github.com/MasterMoltra"
+        }
+    ],
     "license": "MIT"
 }
