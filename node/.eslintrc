@@ -1,0 +1,23 @@
+{
+    "env": {
+        "es6": true,
+        "node": true,
+        "jest": true
+    },
+    "plugins": [
+        "prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 8
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "rules": {
+        // 0 disable - 1 warning - 2 error
+        "no-console": 0,
+        "no-unused-vars": 1,
+        "prettier/prettier": 2
+    }
+}

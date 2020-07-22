@@ -66,8 +66,9 @@ const MMPokeApp = (function() {
             document.getElementsByName('pokeapi-plang'),
             (el) => el.checked === true
         );
-        // strong string check (node or php)
-        plang = plangChecked[0]?.value === 'node' ? 'node' : 'php';
+        // strong check of string and port (by node or php)
+        let plang = plangChecked[0]?.value === 'node' ? 'node' : 'php';
+        let pport = plang === 'node' ? '5000' : window.location.port;
 
         // Send the request
         // OPT 1 - Use Json Object
@@ -92,13 +93,16 @@ const MMPokeApp = (function() {
         // TODO: this field require a cast to Array inside the php render engine
         // dataByForm.append('metadata', JSON.stringify({ plang }));
 
-        let response = await fetch(`/${plang}/pokeinfos`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dataByJson) // dataByForm
-        });
+        let response = await fetch(
+            `//${window.location.hostname}:${pport}/${plang}/pokeinfos`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataByJson) // dataByForm
+            }
+        );
 
         // Get the result
         let result = null;

@@ -1,0 +1,30 @@
+{
+  "name": "mastermoltra-pokeapi",
+  "description": "My Pokeapi implementation with NodeJS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "express": "4.17.1",
+    "cors": "2.8.5",
+    "axios": "0.19.2",
+    "cacache": "15.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "26.1.0",
+    "nodemon": "2.0.4"
+  },
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "jest",
+    "start": "node index.js",
+    "dev": "nodemon -w src/ index.js"
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "author": "Moltrasi Marco",
+  "license": "MIT"
+}
