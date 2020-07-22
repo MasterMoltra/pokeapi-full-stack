@@ -1,5 +1,5 @@
 {
-  "name": "mastermoltra-pokeapi",
+  "name": "mastermoltra-pokeapi-nodejs",
   "description": "My Pokeapi implementation with NodeJS",
   "version": "1.0.0",
   "main": "index.js",

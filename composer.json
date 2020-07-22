@@ -1,6 +1,6 @@
 {
-    "name": "mastermoltra/pokeapi",
-    "description": "My Pokeapi implementation with PHP and NodeJS",
+    "name": "mastermoltra/pokeapi-php",
+    "description": "My Pokeapi implementation with PHP",
     "type": "project",
     "support": {
         "docs": "https://pokeapi.co/docs/v2"
