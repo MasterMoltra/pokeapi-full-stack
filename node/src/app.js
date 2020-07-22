@@ -75,7 +75,7 @@ let getResource = () => {
           const renderedData = pokemonRenderBoxData(data)
           // Before send the data cache it by CacheService with a notice DIV
           const cacheLifetime = (configs.CacheExpire[channel] / 60).toFixed()
-          data.__from__ = `${channel.toUpperCase()} (from NODE) data will be get by internal CACHE for ${cacheLifetime} minutes!`
+          data.__from__ = `${channel.toUpperCase()} (by NODE) data will be get by internal CACHE for ${cacheLifetime} minutes!`
 
           await CacheService.set(
             cacheKey,

@@ -120,9 +120,11 @@ const MMPokeApp = (function() {
         } finally {
             boxContent.innerHTML = '';
             // Append path at the Url
-            domFullUri.innerHTML = `${baseUrl}${
-                result.path
-            } <span>(with ${plang})</span>`;
+            domFullUri.innerHTML = `
+            <span>
+                <img src="/assets/images/icon_${plang}.png" width="50" alt="By ${plang}" title="By ${plang}" />
+            </span> 
+            ${baseUrl}${result.path}`;
             // Restore the form[button]
             event.target.classList.remove('button-disabled-wrapper');
             event.target.disabled = false;

@@ -25,9 +25,9 @@ include_once __DIR__ . '/partials/head.php';
                 </div>
                 <div class="form-input-group radio">
                     <span>With language </span>
-                    <input type="radio" name="pokeapi-plang" value="php"> <label>PHP</label>
+                    <input type="radio" name="pokeapi-plang" value="php" checked> <label>PHP</label>
                     &nbsp;&nbsp;
-                    <input type="radio" name="pokeapi-plang" value="node" checked> <label>NODE</label>
+                    <input type="radio" name="pokeapi-plang" value="node"> <label>NODE</label>
                 </div>
                 <button id="pokeapi-send" type="submit" title="Send">Send</button>
             </fieldset>

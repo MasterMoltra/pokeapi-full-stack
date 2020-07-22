@@ -86,8 +86,15 @@ header.scroll-minimize > img {
     word-break: break-all;
 }
 .container h4 > span {
+    display: block;
     font-size: 10px;
     color: #696969;
+}
+.container h4 > span img {
+    display: inline-block;
+    padding: 5px;
+    background-color: #fff;
+    margin: 10px auto;
 }
 
 .box {

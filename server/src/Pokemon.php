@@ -123,7 +123,7 @@ class Pokemon
             $cachedData = array_merge(
                 $data,
                 [
-                    '__from__' => 'LOCAL data will be get from CACHE for ' . $cacheLifetime . ' minutes!',
+                    '__from__' => 'LOCAL (by PHP) data will be get by internal CACHE for ' . $cacheLifetime . ' minutes!',
                 ]
             );
             $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME['local']);
@@ -157,7 +157,7 @@ class Pokemon
             $cachedData = array_merge(
                 $data,
                 [
-                    '__from__' => 'API data will be get from CACHE for ' . $cacheLifetime . ' minutes!',
+                    '__from__' => 'API (by PHP) data will be get by internal CACHE for ' . $cacheLifetime . ' minutes!',
                 ]
             );
             $this->cache->set($cache_key, $cachedData, self::CACHE_LIFETIME['api']);
