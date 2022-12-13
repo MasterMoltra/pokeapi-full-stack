@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "express": "4.17.1",
+    "express": "4.17.3",
     "cors": "2.8.5",
     "axios": "0.19.2",
     "cacache": "15.0.5"
